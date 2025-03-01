@@ -2,6 +2,15 @@ import { FollowRequest } from '../types';
 import { pendingToast } from '../utils/toastStyles';
 import RewardsSection from './RewardsSection';
 
+// Helper function for profile picture URLs
+const getImageUrl = (path: string, baseUrl: string) => {
+  if (!path) return '';
+  // If path already starts with http or https, return as is
+  if (path.startsWith('http')) return path;
+  // If path already starts with /, don't add another /
+  return path.startsWith('/') ? `${baseUrl}${path}` : `${baseUrl}/${path}`;
+};
+
 interface FollowRequestsSectionProps {
   pendingRequests: FollowRequest[];
   loadingRequests: boolean;
@@ -54,7 +63,7 @@ const FollowRequestsSection = ({
           <div className="flex items-center mb-2">
             {displayUser.profilePicture ? (
               <img 
-                src={`${API_URL}${displayUser.profilePicture}`} 
+                src={getImageUrl(displayUser.profilePicture || '', API_URL)} 
                 alt={displayUser.handle}
                 className="w-8 h-8 rounded-full object-cover mr-3"
                 onError={(e) => {

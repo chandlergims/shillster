@@ -6,6 +6,24 @@ import { useAuth } from '../context/AuthContext';
 // API URL configuration - can be changed for production
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
+// Helper function to ensure we don't duplicate /api in the URL
+const getApiUrl = (endpoint: string) => {
+  // If API_URL already ends with /api, don't add it again
+  if (API_URL.endsWith('/api')) {
+    return `${API_URL}${endpoint}`;
+  }
+  return `${API_URL}/api${endpoint}`;
+};
+
+// Helper function for profile picture URLs
+const getImageUrl = (path: string) => {
+  if (!path) return 'https://via.placeholder.com/50';
+  // If path already starts with http or https, return as is
+  if (path.startsWith('http')) return path;
+  // If path already starts with /, don't add another /
+  return path.startsWith('/') ? `${API_URL}${path}` : `${API_URL}/${path}`;
+};
+
 interface UserCardProps {
   user: User;
   isShiller?: boolean;
@@ -23,7 +41,7 @@ const UserCard = ({ user, isShiller = false, onFollow }: UserCardProps) => {
     try {
       setIsLoading(true);
       await axios.post(
-        `${API_URL}/api/users/${user._id}/follow`,
+        getApiUrl(`/users/${user._id}/follow`),
         {},
         {
           headers: {
@@ -45,7 +63,7 @@ const UserCard = ({ user, isShiller = false, onFollow }: UserCardProps) => {
       <div className="flex items-center">
         <div className="w-12 h-12 rounded-full overflow-hidden mr-4">
           <img
-            src={user.profilePicture || 'https://via.placeholder.com/50'}
+            src={getImageUrl(user.profilePicture || '')}
             alt={user.handle}
             className="w-full h-full object-cover"
           />
@@ -61,7 +79,9 @@ const UserCard = ({ user, isShiller = false, onFollow }: UserCardProps) => {
           </div>
           {isShiller && (
             <div className="text-gray-400 text-sm mt-1">
-              <span className="mr-3">{user.followers?.length || 0} followers</span>
+              <span className="mr-3">
+                {Array.isArray(user.followers) ? user.followers.length : user.followers || 0} followers
+              </span>
               <span>{user.shills || 0} shills</span>
             </div>
           )}
