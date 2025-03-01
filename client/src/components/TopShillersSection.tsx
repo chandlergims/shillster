@@ -58,7 +58,7 @@ const TopShillersSection = ({
         <div className="flex items-center">
           {shiller.profilePicture ? (
             <img 
-              src={getImageUrl(shiller.profilePicture || '', API_URL)} 
+              src={`/api/images/profile/${shiller._id}`} 
               alt={shiller.handle}
               className="w-8 h-8 rounded-full object-cover mr-3"
               onError={(e) => {

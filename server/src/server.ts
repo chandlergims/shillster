@@ -6,6 +6,7 @@ import fs from 'fs';
 import connectDB from './config/db';
 import userRoutes from './routes/userRoutes';
 import shillRoutes from './routes/shillRoutes';
+import imageRoutes from './routes/imageRoutes';
 
 // Load environment variables
 dotenv.config();
@@ -50,6 +51,7 @@ app.use('/uploads', (req, res, next) => {
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/shills', shillRoutes);
+app.use('/api/images', imageRoutes);
 
 // Serve static files from the React app in production
 if (process.env.NODE_ENV === 'production') {

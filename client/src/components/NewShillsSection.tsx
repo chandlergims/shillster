@@ -92,7 +92,7 @@ const NewShillsSection = () => {
                 <div className="flex items-center">
                   {shill.creator.profilePicture ? (
                     <img 
-                      src={getImageUrl(shill.creator.profilePicture || '')} 
+                      src={`/api/images/profile/${shill.creator._id}`} 
                       alt={shill.creator.handle} 
                       className="w-10 h-10 rounded-full object-cover mr-3 border border-[#282b33]"
                       onError={(e) => {

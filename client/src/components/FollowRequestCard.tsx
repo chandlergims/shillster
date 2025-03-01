@@ -44,9 +44,7 @@ const FollowRequestCard = ({ request, onAction }: FollowRequestCardProps) => {
           {request.requester.profilePicture ? (
             <>
               <img
-                src={request.requester.profilePicture.startsWith('/uploads') ? 
-                  request.requester.profilePicture : 
-                  `/api${request.requester.profilePicture}`}
+                src={`/api/images/profile/${request.requester._id}`}
                 alt={request.requester.handle}
                 className="w-full h-full object-cover"
                 onError={(e) => {

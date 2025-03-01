@@ -16,19 +16,13 @@ const getApiUrl = (endpoint: string) => {
 };
 
 // Helper function for profile picture URLs
-const getImageUrl = (path: string) => {
+const getImageUrl = (path: string, userId: string) => {
   if (!path) return 'https://via.placeholder.com/50';
   // If path already starts with http or https, return as is
   if (path.startsWith('http')) return path;
   
-  // If path starts with /uploads, it's a static file path, not an API endpoint
-  if (path.startsWith('/uploads')) {
-    // With the proxy setup, we can use the path directly
-    return path;
-  }
-  
-  // For API endpoints, use the API URL
-  return path.startsWith('/') ? `/api${path}` : `/api/${path}`;
+  // Use the new image API endpoint
+  return `/api/images/profile/${userId}`;
 };
 
 interface UserCardProps {
@@ -71,7 +65,7 @@ const UserCard = ({ user, isShiller = false, onFollow }: UserCardProps) => {
         <div className="w-12 h-12 rounded-full overflow-hidden mr-4">
           {user.profilePicture ? (
             <img
-              src={getImageUrl(user.profilePicture)}
+              src={getImageUrl(user.profilePicture, user._id)}
               alt={user.handle}
               className="w-full h-full object-cover"
               onError={(e) => {

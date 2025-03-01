@@ -48,7 +48,7 @@ const UserProfileModal = ({ user, isOpen, onClose, onFollowSuccess }: UserProfil
             {user.profilePicture ? (
               <>
                 <img 
-                  src={user.profilePicture.startsWith('/uploads') ? user.profilePicture : `/api${user.profilePicture}`} 
+                  src={`/api/images/profile/${user._id}`} 
                   alt={user.handle}
                   className="w-full h-full object-cover rounded-full"
                   onError={(e) => {

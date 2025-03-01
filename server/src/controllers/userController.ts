@@ -27,7 +27,9 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
     }
 
     // Get profile picture path (if provided)
+    // Ensure the path is correct for Railway
     const profilePicture = req.file ? `/uploads/${(req.file as Express.Multer.File).filename}` : '';
+    console.log(`Profile picture path: ${profilePicture}`);
 
     // Create user
     const user = await User.create({

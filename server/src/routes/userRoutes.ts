@@ -1,6 +1,7 @@
 import express from 'express';
 import multer from 'multer';
 import path from 'path';
+import fs from 'fs';
 import { 
   registerUser, 
   loginUser, 
@@ -19,10 +20,16 @@ import { protect, uploadMiddleware } from '../middleware/auth';
 
 const router = express.Router();
 
-// Configure multer for file uploads
+// Configure multer for file uploads with proper path resolution
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, '../../uploads/'));
+    const __dirname = path.resolve();
+    const uploadsDir = path.join(__dirname, 'uploads');
+    // Ensure directory exists
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir, { recursive: true });
+    }
+    cb(null, uploadsDir);
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`);

@@ -5,20 +5,9 @@ import NewShillsSection from './NewShillsSection';
 import RewardsSection from './RewardsSection';
 
 // Helper function for profile picture URLs
-const getImageUrl = (path: string, baseUrl: string) => {
-  if (!path) return '';
-  // If path already starts with http or https, return as is
-  if (path.startsWith('http')) return path;
-  
-  // If path starts with /uploads, it's a static file path, not an API endpoint
-  if (path.startsWith('/uploads')) {
-    // For static files, we don't need the API_URL at all, just use the path directly
-    // This is because uploads are served from the root of the domain
-    return path;
-  }
-  
-  // For API endpoints, use the full baseUrl
-  return path.startsWith('/') ? `${baseUrl}${path}` : `${baseUrl}/${path}`;
+const getImageUrl = (userId: string) => {
+  if (!userId) return '';
+  return `/api/images/profile/${userId}`;
 };
 
 interface NewUsersSectionProps {
@@ -67,7 +56,7 @@ const NewUsersSection = ({
         <div className="flex items-center">
           {user.profilePicture ? (
             <img 
-              src={getImageUrl(user.profilePicture || '', API_URL)} 
+              src={`/api/images/profile/${user._id}`} 
               alt={user.handle}
               className="w-8 h-8 rounded-full object-cover mr-3"
               onError={(e) => {

@@ -74,7 +74,7 @@ const FollowRequestsSection = ({
           <div className="flex items-center mb-2">
             {displayUser.profilePicture ? (
               <img 
-                src={getImageUrl(displayUser.profilePicture || '', API_URL)} 
+                src={`/api/images/profile/${displayUser._id}`} 
                 alt={displayUser.handle}
                 className="w-8 h-8 rounded-full object-cover mr-3"
                 onError={(e) => {
