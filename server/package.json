@@ -6,6 +6,7 @@
     "start": "node dist/server.js",
     "dev": "ts-node-dev src/server.ts",
     "build": "tsc",
+    "check": "tsc --noEmit",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
