@@ -21,7 +21,7 @@ const FollowRequestCard = ({ request, onAction }: FollowRequestCardProps) => {
     try {
       setIsLoading(true);
       await axios.put(
-        `${API_URL}/api/users/follow-requests/${request._id}`,
+        `/api/users/follow-requests/${request._id}`,
         { status },
         {
           headers: {
@@ -42,7 +42,11 @@ const FollowRequestCard = ({ request, onAction }: FollowRequestCardProps) => {
       <div className="flex items-center">
         <div className="w-12 h-12 rounded-full overflow-hidden mr-4">
           <img
-            src={request.requester.profilePicture || 'https://via.placeholder.com/50'}
+            src={request.requester.profilePicture ? 
+              (request.requester.profilePicture.startsWith('/uploads') ? 
+                request.requester.profilePicture : 
+                `/api${request.requester.profilePicture}`) : 
+              'https://via.placeholder.com/50'}
             alt={request.requester.handle}
             className="w-full h-full object-cover"
             onError={(e) => {

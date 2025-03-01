@@ -46,7 +46,7 @@ const UserProfileModal = ({ user, isOpen, onClose, onFollowSuccess }: UserProfil
         <div className="flex items-center mb-6">
           {user.profilePicture ? (
             <img 
-              src={`${API_URL}${user.profilePicture}`} 
+              src={user.profilePicture.startsWith('/uploads') ? user.profilePicture : `/api${user.profilePicture}`} 
               alt={user.handle}
               className="w-16 h-16 object-cover mr-4"
               onError={(e) => {
@@ -132,7 +132,7 @@ const UserProfileModal = ({ user, isOpen, onClose, onFollowSuccess }: UserProfil
                   }
                   
                   await axios.post(
-                    `${API_URL}/api/users/${user._id}/follow`,
+                    `/api/users/${user._id}/follow`,
                     {},
                     {
                       headers: {
