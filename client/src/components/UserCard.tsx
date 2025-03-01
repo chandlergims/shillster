@@ -73,6 +73,19 @@ const UserCard = ({ user, isShiller = false, onFollow }: UserCardProps) => {
             src={getImageUrl(user.profilePicture || '')}
             alt={user.handle}
             className="w-full h-full object-cover"
+            onError={(e) => {
+              // Fallback to letter if image fails to load
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+              const parent = target.parentElement;
+              if (parent) {
+                parent.classList.add('bg-green-500', 'flex', 'items-center', 'justify-center');
+                const fallback = document.createElement('span');
+                fallback.className = "text-white font-bold text-lg";
+                fallback.textContent = user.handle.charAt(0).toUpperCase();
+                parent.appendChild(fallback);
+              }
+            }}
           />
         </div>
         <div>
