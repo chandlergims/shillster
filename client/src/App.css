@@ -1,0 +1,92 @@
+/* This file is intentionally left mostly empty as we're using Tailwind CSS for styling */
+/* You can add any global styles that can't be handled by Tailwind here */
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Custom Toast Styles */
+.Toastify__toast {
+  border-radius: 4px !important;
+  background: #1b1d22 !important; /* Match site's new dark theme */
+  color: #fbfcff !important;
+  font-family: monospace !important; /* Match site's font */
+  border: 1px solid #282b33 !important; /* Match site's new border color */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
+  padding: 12px 16px !important;
+  font-size: 14px !important;
+  margin-bottom: 8px !important;
+}
+
+.Toastify__toast--success {
+  border-left: 4px solid #97ef83 !important; /* Match site's new green */
+}
+
+.Toastify__toast--info {
+  border-left: 4px solid #4779ff !important; /* Match site's new blue */
+}
+
+.Toastify__toast--warning {
+  border-left: 4px solid #f59e0b !important;
+}
+
+.Toastify__toast--error {
+  border-left: 4px solid #ff6a6a !important; /* Match site's new red */
+}
+
+.Toastify__progress-bar {
+  background: #97ef83 !important; /* Match site's new green */
+  height: 2px !important;
+}
+
+.Toastify__toast-icon {
+  margin-right: 12px !important;
+}
+
+.Toastify__close-button {
+  color: #4b5563 !important; /* gray-600 */
+}
+
+.Toastify__close-button:hover {
+  color: #ffffff !important;
+}
+
+/* Toast animations */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.Toastify__toast--enter {
+  animation: slideIn 0.3s ease forwards;
+}
+
+.Toastify__toast--exit {
+  animation: slideOut 0.3s ease forwards;
+}
