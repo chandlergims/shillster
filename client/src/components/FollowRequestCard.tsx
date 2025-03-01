@@ -40,29 +40,40 @@ const FollowRequestCard = ({ request, onAction }: FollowRequestCardProps) => {
   return (
     <div className="bg-[#24272e] border border-[#282b33] rounded-lg p-4 flex items-center justify-between">
       <div className="flex items-center">
-        <div className="w-12 h-12 rounded-full overflow-hidden mr-4">
-          <img
-            src={request.requester.profilePicture ? 
-              (request.requester.profilePicture.startsWith('/uploads') ? 
-                request.requester.profilePicture : 
-                `/api${request.requester.profilePicture}`) : 
-              'https://via.placeholder.com/50'}
-            alt={request.requester.handle}
-            className="w-full h-full object-cover"
-            onError={(e) => {
-              // Fallback to letter if image fails to load
-              const target = e.target as HTMLImageElement;
-              target.style.display = 'none';
-              const parent = target.parentElement;
-              if (parent) {
-                parent.classList.add('bg-[#4779ff]', 'flex', 'items-center', 'justify-center');
-                const fallback = document.createElement('span');
-                fallback.className = "text-white font-bold text-lg";
-                fallback.textContent = request.requester.handle.charAt(0).toUpperCase();
-                parent.appendChild(fallback);
-              }
-            }}
-          />
+        <div className="w-12 h-12 rounded-full overflow-hidden mr-4 relative">
+          {request.requester.profilePicture ? (
+            <>
+              <img
+                src={request.requester.profilePicture.startsWith('/uploads') ? 
+                  request.requester.profilePicture : 
+                  `/api${request.requester.profilePicture}`}
+                alt={request.requester.handle}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  // Hide the image on error
+                  (e.target as HTMLImageElement).style.display = 'none';
+                  // Show the fallback (it's already in the DOM)
+                  const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                  if (fallback) fallback.style.display = 'flex';
+                }}
+              />
+              {/* Fallback element (hidden by default) */}
+              <div 
+                className="w-full h-full bg-[#4779ff] absolute top-0 left-0 flex items-center justify-center"
+                style={{ display: 'none' }}
+              >
+                <span className="text-white font-bold text-lg">
+                  {request.requester.handle.charAt(0).toUpperCase()}
+                </span>
+              </div>
+            </>
+          ) : (
+            <div className="w-full h-full bg-[#4779ff] flex items-center justify-center">
+              <span className="text-white font-bold text-lg">
+                {request.requester.handle.charAt(0).toUpperCase()}
+              </span>
+            </div>
+          )}
         </div>
         <div>
           <h3 className="text-[#fbfcff] font-medium">@{request.requester.handle}</h3>

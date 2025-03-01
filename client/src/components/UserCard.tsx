@@ -69,24 +69,30 @@ const UserCard = ({ user, isShiller = false, onFollow }: UserCardProps) => {
     <div className="bg-gray-800 rounded-lg p-4 flex items-center justify-between">
       <div className="flex items-center">
         <div className="w-12 h-12 rounded-full overflow-hidden mr-4">
-          <img
-            src={getImageUrl(user.profilePicture || '')}
-            alt={user.handle}
-            className="w-full h-full object-cover"
-            onError={(e) => {
-              // Fallback to letter if image fails to load
-              const target = e.target as HTMLImageElement;
-              target.style.display = 'none';
-              const parent = target.parentElement;
-              if (parent) {
-                parent.classList.add('bg-green-500', 'flex', 'items-center', 'justify-center');
-                const fallback = document.createElement('span');
-                fallback.className = "text-white font-bold text-lg";
-                fallback.textContent = user.handle.charAt(0).toUpperCase();
-                parent.appendChild(fallback);
-              }
-            }}
-          />
+          {user.profilePicture ? (
+            <img
+              src={getImageUrl(user.profilePicture)}
+              alt={user.handle}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                // Fallback to letter if image fails to load
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+                const parent = target.parentElement;
+                if (parent) {
+                  parent.classList.add('bg-green-500', 'flex', 'items-center', 'justify-center');
+                  const fallback = document.createElement('span');
+                  fallback.className = "text-white font-bold text-lg";
+                  fallback.textContent = user.handle.charAt(0).toUpperCase();
+                  parent.appendChild(fallback);
+                }
+              }}
+            />
+          ) : (
+            <div className="w-full h-full bg-green-500 flex items-center justify-center">
+              <span className="text-white font-bold text-lg">{user.handle.charAt(0).toUpperCase()}</span>
+            </div>
+          )}
         </div>
         <div>
           <div className="flex items-center">

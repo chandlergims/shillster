@@ -44,29 +44,35 @@ const UserProfileModal = ({ user, isOpen, onClose, onFollowSuccess }: UserProfil
         </div>
         
         <div className="flex items-center mb-6">
-          {user.profilePicture ? (
-            <img 
-              src={user.profilePicture.startsWith('/uploads') ? user.profilePicture : `/api${user.profilePicture}`} 
-              alt={user.handle}
-              className="w-16 h-16 object-cover mr-4"
-              onError={(e) => {
-                // Fallback to letter if image fails to load
-                const target = e.target as HTMLImageElement;
-                target.style.display = 'none';
-                const parent = target.parentElement;
-                if (parent) {
-                  const fallback = document.createElement('div');
-                  fallback.className = "w-16 h-16 bg-green-500 flex items-center justify-center text-white font-bold text-xl mr-4";
-                  fallback.textContent = user.handle.charAt(0).toUpperCase();
-                  parent.insertBefore(fallback, target.nextSibling);
-                }
-              }}
-            />
-          ) : (
-            <div className="w-16 h-16 bg-green-500 flex items-center justify-center text-white font-bold text-xl mr-4">
-              {user.handle.charAt(0).toUpperCase()}
-            </div>
-          )}
+          <div className="w-16 h-16 mr-4 relative">
+            {user.profilePicture ? (
+              <>
+                <img 
+                  src={user.profilePicture.startsWith('/uploads') ? user.profilePicture : `/api${user.profilePicture}`} 
+                  alt={user.handle}
+                  className="w-full h-full object-cover rounded-full"
+                  onError={(e) => {
+                    // Hide the image on error
+                    (e.target as HTMLImageElement).style.display = 'none';
+                    // Show the fallback (it's already in the DOM)
+                    const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                    if (fallback) fallback.style.display = 'flex';
+                  }}
+                />
+                {/* Fallback element (hidden by default) */}
+                <div 
+                  className="w-full h-full bg-green-500 rounded-full absolute top-0 left-0 flex items-center justify-center text-white font-bold text-xl"
+                  style={{ display: 'none' }}
+                >
+                  {user.handle.charAt(0).toUpperCase()}
+                </div>
+              </>
+            ) : (
+              <div className="w-full h-full bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                {user.handle.charAt(0).toUpperCase()}
+              </div>
+            )}
+          </div>
           <div>
             <div className="text-white text-xl font-medium">@{user.handle}</div>
             {user.role === 'shiller' && (
