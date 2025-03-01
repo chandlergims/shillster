@@ -54,6 +54,11 @@ const NewUsersSection = ({
       ));
     }
 
+    // Ensure newUsers is an array before calling slice and map
+    if (!Array.isArray(newUsers)) {
+      return <div className="text-[#a8aab0] text-center py-4">No new users found</div>;
+    }
+
     return newUsers.slice(0, 4).map((user) => (
       <div 
         key={user._id} 
@@ -110,7 +115,9 @@ const NewUsersSection = ({
         <div className="flex items-center mb-4">
           <div className="w-3 h-3 bg-[#97ef83] rounded-full mr-2"></div>
           <h2 className="text-[#97ef83] font-bold uppercase tracking-wider">new_users</h2>
-          <span className="ml-auto bg-[#24272e] text-[#97ef83] px-2 py-0.5 text-sm font-bold rounded-md">{newUsers.length}</span>
+          <span className="ml-auto bg-[#24272e] text-[#97ef83] px-2 py-0.5 text-sm font-bold rounded-md">
+            {Array.isArray(newUsers) ? newUsers.length : 0}
+          </span>
         </div>
         
         <div className="space-y-2 max-h-[400px] overflow-y-auto">

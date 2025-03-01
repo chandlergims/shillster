@@ -22,13 +22,12 @@ const getImageUrl = (path: string) => {
   
   // If path starts with /uploads, it's a static file path, not an API endpoint
   if (path.startsWith('/uploads')) {
-    // For static files, we don't need the API_URL at all, just use the path directly
-    // This is because uploads are served from the root of the domain
+    // With the proxy setup, we can use the path directly
     return path;
   }
   
-  // For API endpoints, use the full API_URL
-  return path.startsWith('/') ? `${API_URL}${path}` : `${API_URL}/${path}`;
+  // For API endpoints, use the API URL
+  return path.startsWith('/') ? `/api${path}` : `/api/${path}`;
 };
 
 // Define action types

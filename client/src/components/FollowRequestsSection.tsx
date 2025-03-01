@@ -38,6 +38,9 @@ const FollowRequestsSection = ({
   handleCancelRequest,
   API_URL
 }: FollowRequestsSectionProps) => {
+  // Ensure pendingRequests is an array
+  const requests = Array.isArray(pendingRequests) ? pendingRequests : [];
+  
   // Render the pending requests
   const renderPendingRequests = () => {
     if (loadingRequests) {
@@ -54,11 +57,11 @@ const FollowRequestsSection = ({
       ));
     }
 
-    if (pendingRequests.length === 0) {
+    if (requests.length === 0) {
       return <div className="text-[#a8aab0] text-center py-4">No pending requests</div>;
     }
 
-    return pendingRequests.map((request) => {
+    return requests.map((request) => {
       // Determine which user to display based on role
       const displayUser = userRole === 'shiller' 
         ? request.requester 
@@ -138,7 +141,7 @@ const FollowRequestsSection = ({
           <h2 className="text-[#97ef83] font-bold uppercase tracking-wider">
             {userRole === 'shiller' ? 'incoming_requests' : 'follow_requests'}
           </h2>
-          <span className="ml-auto bg-[#24272e] text-[#97ef83] px-2 py-0.5 text-sm font-bold rounded-md">{pendingRequests.length}</span>
+          <span className="ml-auto bg-[#24272e] text-[#97ef83] px-2 py-0.5 text-sm font-bold rounded-md">{requests.length}</span>
         </div>
         
         <div className="space-y-2">

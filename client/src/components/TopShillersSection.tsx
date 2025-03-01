@@ -49,7 +49,8 @@ const TopShillersSection = ({
       ));
     }
 
-    return topShillers.slice(0, 6).map((shiller) => (
+    // Ensure topShillers is an array before calling slice and map
+    return Array.isArray(topShillers) ? topShillers.slice(0, 6).map((shiller) => (
       <div 
         key={shiller._id} 
         className="bg-[#24272e] border border-[#282b33] p-3 hover:border-[#97ef83]/30 transition-colors duration-200 rounded-lg"
@@ -99,7 +100,10 @@ const TopShillersSection = ({
           )}
         </div>
       </div>
-    ));
+    )) : (
+      // If topShillers is not an array, show a message
+      <div className="text-[#a8aab0] text-center py-4">No shillers found</div>
+    );
   };
 
   return (
@@ -107,7 +111,9 @@ const TopShillersSection = ({
       <div className="flex items-center mb-4">
         <div className="w-3 h-3 bg-[#97ef83] rounded-full mr-2"></div>
         <h2 className="text-[#97ef83] font-bold uppercase tracking-wider">approved_shillers</h2>
-        <span className="ml-auto bg-[#24272e] text-[#97ef83] px-2 py-0.5 text-sm font-bold rounded-md">{topShillers.length}</span>
+        <span className="ml-auto bg-[#24272e] text-[#97ef83] px-2 py-0.5 text-sm font-bold rounded-md">
+          {Array.isArray(topShillers) ? topShillers.length : 0}
+        </span>
       </div>
       
       <div className="space-y-2">

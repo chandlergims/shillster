@@ -56,10 +56,18 @@ const NewShillsSection = () => {
       const response = await axios.get(getApiUrl('/shills/recent'));
       
       // We only want to show the creator info, not the actual shill content
-      setNewShills(response.data);
+      if (Array.isArray(response.data)) {
+        setNewShills(response.data);
+      } else {
+        // If response.data is not an array, set newShills to an empty array
+        setNewShills([]);
+        console.error('Expected array but got:', typeof response.data);
+      }
     } catch (error) {
       console.error('Error fetching new shills:', error);
       errorToast('Failed to load new shills');
+      // Set to empty array on error
+      setNewShills([]);
     } finally {
       setLoading(false);
     }
@@ -77,7 +85,7 @@ const NewShillsSection = () => {
           <div className="flex justify-center py-8">
             <div className="animate-pulse text-[#a8aab0]">Loading...</div>
           </div>
-        ) : newShills.length > 0 ? (
+        ) : Array.isArray(newShills) && newShills.length > 0 ? (
           <div className="space-y-4">
             {newShills.map((shill) => (
               <div key={shill._id} className="bg-[#1b1d22] border border-[#282b33] p-3 rounded-lg">
