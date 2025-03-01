@@ -20,7 +20,17 @@ const getImageUrl = (path: string) => {
   if (!path) return '';
   // If path already starts with http or https, return as is
   if (path.startsWith('http')) return path;
-  // If path already starts with /, don't add another /
+  
+  // If path starts with /uploads, it's a static file path, not an API endpoint
+  if (path.startsWith('/uploads')) {
+    // For static files, we need to use the base domain without the /api part
+    const baseDomain = API_URL.endsWith('/api') 
+      ? API_URL.substring(0, API_URL.length - 4) // Remove /api
+      : API_URL;
+    return `${baseDomain}${path}`;
+  }
+  
+  // For API endpoints, use the full API_URL
   return path.startsWith('/') ? `${API_URL}${path}` : `${API_URL}/${path}`;
 };
 
