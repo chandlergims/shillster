@@ -11,11 +11,9 @@ const getImageUrl = (path: string, baseUrl: string) => {
   
   // If path starts with /uploads, it's a static file path, not an API endpoint
   if (path.startsWith('/uploads')) {
-    // For static files, we need to use the base domain without the /api part
-    const baseDomain = baseUrl.endsWith('/api') 
-      ? baseUrl.substring(0, baseUrl.length - 4) // Remove /api
-      : baseUrl;
-    return `${baseDomain}${path}`;
+    // For static files, we don't need the API_URL at all, just use the path directly
+    // This is because uploads are served from the root of the domain
+    return path;
   }
   
   // For API endpoints, use the full baseUrl
