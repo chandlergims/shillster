@@ -2,6 +2,7 @@ import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import path from 'path';
+import fs from 'fs';
 import connectDB from './config/db';
 import userRoutes from './routes/userRoutes';
 import shillRoutes from './routes/shillRoutes';
@@ -26,8 +27,25 @@ app.use(cors({
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Make uploads folder static
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+// Ensure uploads directory exists
+const uploadsDir = path.join(__dirname, '../uploads');
+if (!fs.existsSync(uploadsDir)) {
+  console.log(`Creating uploads directory: ${uploadsDir}`);
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// Make uploads folder static with debugging
+app.use('/uploads', (req, res, next) => {
+  console.log(`Uploads request: ${req.url}`);
+  const filePath = path.join(uploadsDir, req.url);
+  console.log(`Checking file: ${filePath}`);
+  if (fs.existsSync(filePath)) {
+    console.log(`File exists: ${filePath}`);
+  } else {
+    console.log(`File does not exist: ${filePath}`);
+  }
+  next();
+}, express.static(uploadsDir));
 
 // Routes
 app.use('/api/users', userRoutes);
@@ -59,6 +77,19 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`Uploads directory: ${uploadsDir}`);
+  
+  // List files in uploads directory
+  if (fs.existsSync(uploadsDir)) {
+    console.log('Uploads directory exists');
+    const files = fs.readdirSync(uploadsDir);
+    console.log(`Files in uploads directory: ${files.length}`);
+    files.forEach(file => {
+      console.log(` - ${file}`);
+    });
+  } else {
+    console.log('Uploads directory does not exist');
+  }
 });
 
 // Export for Vercel (if needed)
