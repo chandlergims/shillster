@@ -3,6 +3,15 @@ import { User } from '../types';
 // API URL configuration - can be changed for production
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
+// Helper function for profile picture URLs
+const getImageUrl = (path: string, baseUrl: string) => {
+  if (!path) return '';
+  // If path already starts with http or https, return as is
+  if (path.startsWith('http')) return path;
+  // If path already starts with /, don't add another /
+  return path.startsWith('/') ? `${baseUrl}${path}` : `${baseUrl}/${path}`;
+};
+
 interface FollowingSectionProps {
   followingUsers: User[];
   userRole: 'user' | 'shiller';
@@ -40,7 +49,7 @@ const FollowingSection = ({
             <div className="flex items-center">
               {user.profilePicture ? (
                 <img 
-                  src={`${apiUrl}${user.profilePicture}`} 
+                  src={getImageUrl(user.profilePicture || '', apiUrl)} 
                   alt={user.handle}
                   className="w-8 h-8 rounded-full object-cover mr-3"
                   onError={(e) => {

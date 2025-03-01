@@ -6,6 +6,24 @@ import { errorToast } from '../utils/toastStyles';
 // API URL configuration - can be changed for production
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
+// Helper function to ensure we don't duplicate /api in the URL
+const getApiUrl = (endpoint: string) => {
+  // If API_URL already ends with /api, don't add it again
+  if (API_URL.endsWith('/api')) {
+    return `${API_URL}${endpoint}`;
+  }
+  return `${API_URL}/api${endpoint}`;
+};
+
+// Helper function for profile picture URLs
+const getImageUrl = (path: string) => {
+  if (!path) return '';
+  // If path already starts with http or https, return as is
+  if (path.startsWith('http')) return path;
+  // If path already starts with /, don't add another /
+  return path.startsWith('/') ? `${API_URL}${path}` : `${API_URL}/${path}`;
+};
+
 interface NewShillInfo {
   _id: string;
   creator: {
@@ -27,7 +45,7 @@ const NewShillsSection = () => {
   const fetchNewShills = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_URL}/api/shills/recent`);
+      const response = await axios.get(getApiUrl('/shills/recent'));
       
       // We only want to show the creator info, not the actual shill content
       setNewShills(response.data);
@@ -58,7 +76,7 @@ const NewShillsSection = () => {
                 <div className="flex items-center">
                   {shill.creator.profilePicture ? (
                     <img 
-                      src={`${API_URL}${shill.creator.profilePicture}`} 
+                      src={getImageUrl(shill.creator.profilePicture || '')} 
                       alt={shill.creator.handle} 
                       className="w-10 h-10 rounded-full object-cover mr-3 border border-[#282b33]"
                       onError={(e) => {

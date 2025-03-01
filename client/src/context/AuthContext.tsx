@@ -5,6 +5,15 @@ import { User, AuthState } from '../types';
 // API URL configuration - can be changed for production
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
+// Helper function to ensure we don't duplicate /api in the URL
+const getApiUrl = (endpoint: string) => {
+  // If API_URL already ends with /api, don't add it again
+  if (API_URL.endsWith('/api')) {
+    return `${API_URL}${endpoint}`;
+  }
+  return `${API_URL}/api${endpoint}`;
+};
+
 // Define action types
 type AuthAction =
   | { type: 'LOGIN_SUCCESS'; payload: User }
@@ -96,7 +105,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (!token) return;
 
       try {
-        const res = await axios.get(`${API_URL}/api/users/profile`, {
+        const res = await axios.get(getApiUrl('/users/profile'), {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -121,7 +130,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (handle: string, password: string) => {
     try {
       dispatch({ type: 'LOADING' });
-      const res = await axios.post(`${API_URL}/api/users/login`, {
+      const res = await axios.post(getApiUrl('/users/login'), {
         handle,
         password,
       });
@@ -164,7 +173,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const register = async (formData: FormData) => {
     try {
       dispatch({ type: 'LOADING' });
-      const res = await axios.post(`${API_URL}/api/users`, formData, {
+      const res = await axios.post(getApiUrl('/users'), formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

@@ -26,6 +26,15 @@ import NewShillsSection from '../components/NewShillsSection';
 // API URL configuration - can be changed for production
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
+// Helper function to ensure we don't duplicate /api in the URL
+const getApiUrl = (endpoint: string) => {
+  // If API_URL already ends with /api, don't add it again
+  if (API_URL.endsWith('/api')) {
+    return `${API_URL}${endpoint}`;
+  }
+  return `${API_URL}/api${endpoint}`;
+};
+
 // No more mock data
 
 // No more mock data generation for top shillers
@@ -90,7 +99,7 @@ const HomePage = () => {
   // Fetch top shillers
   const fetchTopShillers = useCallback(async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/users/top-shillers`);
+      const response = await axios.get(getApiUrl('/users/top-shillers'));
       if (response.data && response.data.length > 0) {
         setTopShillers(response.data);
       } else {
@@ -110,7 +119,7 @@ const HomePage = () => {
   // Fetch new users
   const fetchNewUsers = useCallback(async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/users/new`);
+      const response = await axios.get(getApiUrl('/users/new'));
       if (response.data && response.data.length > 0) {
         setNewUsers(response.data);
       } else {
@@ -186,7 +195,7 @@ const HomePage = () => {
       // Get the endpoint based on user role
       const endpoint = userRole === 'shiller' ? 'followers' : 'following';
       
-      const response = await axios.get(`${API_URL}/api/users/${endpoint}`, {
+      const response = await axios.get(getApiUrl(`/users/${endpoint}`), {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -212,7 +221,7 @@ const HomePage = () => {
       // Get token from localStorage
       const token = localStorage.getItem('token');
       if (token) {
-        const response = await axios.get(`${API_URL}/api/users/follow-requests`, {
+        const response = await axios.get(getApiUrl('/users/follow-requests'), {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -274,7 +283,7 @@ const HomePage = () => {
       }
       
       await axios.post(
-        `${API_URL}/api/users/${userId}/follow`,
+        getApiUrl(`/users/${userId}/follow`),
         {},
         {
           headers: {
@@ -315,7 +324,7 @@ const HomePage = () => {
       }
       
       // Delete the follow request
-      await axios.delete(`${API_URL}/api/users/follow-requests/${requestId}`, {
+      await axios.delete(getApiUrl(`/users/follow-requests/${requestId}`), {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -344,7 +353,7 @@ const HomePage = () => {
       
       // Accept the follow request
       await axios.put(
-        `${API_URL}/api/users/follow-requests/${requestId}`,
+        getApiUrl(`/users/follow-requests/${requestId}`),
         { status: 'accepted' },
         {
           headers: {
@@ -376,7 +385,7 @@ const HomePage = () => {
       
       // Decline the follow request
       await axios.put(
-        `${API_URL}/api/users/follow-requests/${requestId}`,
+        getApiUrl(`/users/follow-requests/${requestId}`),
         { status: 'declined' },
         {
           headers: {
@@ -408,8 +417,8 @@ const HomePage = () => {
       
       // Different endpoint based on user role
       const endpoint = userRole === 'shiller' 
-        ? `${API_URL}/api/shills/me` 
-        : `${API_URL}/api/shills/followed`;
+        ? getApiUrl('/shills/me') 
+        : getApiUrl('/shills/followed');
       
       const response = await axios.get(endpoint, {
         headers: {
@@ -480,7 +489,7 @@ const HomePage = () => {
       }
       
       await axios.post(
-        `${API_URL}/api/shills`,
+        getApiUrl('/shills'),
         { tokenAddress, reason },
         {
           headers: {
@@ -514,7 +523,7 @@ const HomePage = () => {
       }
       
       await axios.put(
-        `${API_URL}/api/shills/${shillId}/cancel`,
+        getApiUrl(`/shills/${shillId}/cancel`),
         {},
         {
           headers: {
